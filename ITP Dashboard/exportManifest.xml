@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ExportManifest xmlns:ns2="http://www.pentaho.com/schema/">
+    <ExportManifestInformation exportDate="23-08-2019 04:47:45 IST" exportBy="admin" rootFolder="/public/" manifestVersion="2"/>
+    <ExportManifestEntity path="ITP Dashboard">
+        <ExportManifestProperty>
+            <EntityMetaData name="ITP Dashboard" createdDate="2019-08-21T12:29:18.676+05:30" isFolder="true" path="ITP Dashboard" isHidden="false" isSchedulable="true" locale="en_US" title="ITP Dashboard"/>
+        </ExportManifestProperty>
+        <ExportManifestProperty>
+            <EntityAcl>
+                <entriesInheriting>true</entriesInheriting>
+                <owner>admin</owner>
+                <ownerType>USER</ownerType>
+            </EntityAcl>
+        </ExportManifestProperty>
+    </ExportManifestEntity>
+    <ExportManifestEntity path="ITP Dashboard/ITPDashboard.cda">
+        <ExportManifestProperty>
+            <EntityMetaData name="ITPDashboard.cda" createdDate="2019-08-21T13:08:04.781+05:30" isFolder="false" path="ITP Dashboard/ITPDashboard.cda" isHidden="false" isSchedulable="true" locale="en_US" title="ITPDashboard.cda"/>
+        </ExportManifestProperty>
+        <ExportManifestProperty>
+            <EntityAcl>
+                <entriesInheriting>true</entriesInheriting>
+                <owner>admin</owner>
+                <ownerType>USER</ownerType>
+            </EntityAcl>
+        </ExportManifestProperty>
+    </ExportManifestEntity>
+    <ExportManifestEntity path="ITP Dashboard/ITPDashboard.cdfde">
+        <ExportManifestProperty>
+            <EntityMetaData name="ITPDashboard.cdfde" createdDate="2019-08-21T12:40:41.405+05:30" isFolder="false" path="ITP Dashboard/ITPDashboard.cdfde" isHidden="false" isSchedulable="true" locale="en_US" title="ITPDashboard.cdfde"/>
+        </ExportManifestProperty>
+        <ExportManifestProperty>
+            <EntityAcl>
+                <entriesInheriting>true</entriesInheriting>
+                <owner>admin</owner>
+                <ownerType>USER</ownerType>
+            </EntityAcl>
+        </ExportManifestProperty>
+    </ExportManifestEntity>
+    <ExportManifestEntity path="ITP Dashboard/ITPDashboard.wcdf">
+        <ExportManifestProperty>
+            <EntityMetaData name="ITPDashboard.wcdf" createdDate="2019-08-21T12:40:41.287+05:30" isFolder="false" path="ITP Dashboard/ITPDashboard.wcdf" isHidden="false" isSchedulable="true" locale="en_US" description="ITPDashboard" title="ITPDashboard"/>
+        </ExportManifestProperty>
+        <ExportManifestProperty>
+            <EntityAcl>
+                <entriesInheriting>true</entriesInheriting>
+                <owner>admin</owner>
+                <ownerType>USER</ownerType>
+            </EntityAcl>
+        </ExportManifestProperty>
+    </ExportManifestEntity>
+    <ExportManifestEntity path="ITP Dashboard/css">
+        <ExportManifestProperty>
+            <EntityMetaData name="css" createdDate="2019-08-21T12:30:02.945+05:30" isFolder="true" path="ITP Dashboard/css" isHidden="false" isSchedulable="true" locale="en_US" title="css"/>
+        </ExportManifestProperty>
+        <ExportManifestProperty>
+            <EntityAcl>
+                <entriesInheriting>true</entriesInheriting>
+                <owner>admin</owner>
+                <ownerType>USER</ownerType>
+            </EntityAcl>
+        </ExportManifestProperty>
+    </ExportManifestEntity>
+    <ExportManifestEntity path="ITP Dashboard/css/custom.css">
+        <ExportManifestProperty>
+            <EntityMetaData name="custom.css" createdDate="2019-08-21T12:42:35.816+05:30" isFolder="false" path="ITP Dashboard/css/custom.css" isHidden="false" isSchedulable="true" locale="en_US" title="custom.css"/>
+        </ExportManifestProperty>
+        <ExportManifestProperty>
+            <EntityAcl>
+                <entriesInheriting>true</entriesInheriting>
+                <owner>admin</owner>
+                <ownerType>USER</ownerType>
+            </EntityAcl>
+        </ExportManifestProperty>
+    </ExportManifestEntity>
+    <ExportManifestEntity path="ITP Dashboard/js">
+        <ExportManifestProperty>
+            <EntityMetaData name="js" createdDate="2019-08-21T12:29:56.749+05:30" isFolder="true" path="ITP Dashboard/js" isHidden="false" isSchedulable="true" locale="en_US" title="js"/>
+        </ExportManifestProperty>
+        <ExportManifestProperty>
+            <EntityAcl>
+                <entriesInheriting>true</entriesInheriting>
+                <owner>admin</owner>
+                <ownerType>USER</ownerType>
+            </EntityAcl>
+        </ExportManifestProperty>
+    </ExportManifestEntity>
+</ns2:ExportManifest>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+	<style>
+		body {
+			font-family: Calibri;
+		}
+		table {
+		  border-collapse: collapse;
+		  border: 1px solid black;
+		} 
+
+		th,td {
+		  border: 1px solid black;
+		}
+		td {
+			text-align: right !important;
+		}
+		table.a {
+		  table-layout: auto;
+		  width: 180px;  
+		}
+
+		table.b {
+		  table-layout: fixed;
+		  width: 180px;  
+		}
+
+		table.c {
+		  table-layout: auto;
+		  width: 100%;  
+		}
+
+		table.d {
+		  table-layout: fixed;
+		  width: 100%;  
+		}
+		.heading {
+			font-size: 20px;
+			font-weight: bold;
+			text-decoration: underline;
+			margin-top: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="heading">Summary  Data (Trading period from {{ from_date }} to {{ to_date }})</div>
+	{{ summary_data_table }}
+	<div class="heading">Stats Data</div>
+	{{perf_stats_data_table}}
+	<div class="heading">PnL Data</div>
+	 {{ PnL_data_table }}
+	<div class="heading">Returns Data</div>
+	{{ returns_data_table }}
+	<div class="heading">Drawdown Data in (%)</div>
+	{{ drawdown_data_table }}
+	<div class="heading">Absolute Drawdown Data</div>
+	{{drawdown_abs_data_table}}
+	
+	<div class="heading">Profitability</div>
+	{{ profit_data_table }}
+	<div class="heading">Duration Data</div>
+	{{ duration_data_table }}
+	
+	<div class="heading">Monthly Data</div>
+	{{ monthly_data_table }}
+	<div class="heading">Yearly Data</div>
+	{{ yearly_data_table }}
+	
+	<img  style="width:80%;height:80%;" src="data:image/jpeg;base64,{{ round_trip_fig }}">
+	<img style="width:90%;height:90%;" src="data:image/jpeg;base64,{{ return_tear_fig_1 }}">
+	<img style="width:90%;height:90%;" src="data:image/jpeg;base64,{{ return_tear_fig_2 }}">
+	<img style="width:90%;height:90%;" src="data:image/jpeg;base64,{{ return_tear_fig_3 }}">
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</html>
