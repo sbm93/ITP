@@ -605,6 +605,28 @@ def create_returns_tear_sheet_multi(returns, live_start_date=None,
     return fig, drawdown_df
 
 @plotting_context
+def create_returns_tear_drawdown_data(returns, live_start_date=None,
+                              cone_std=(1.0, 1.5, 2.0),
+                              benchmark_rets=None,
+                              bootstrap=False,
+                              return_fig=False,
+                              investment=1.0,
+                              shares_held=1):
+    
+    if benchmark_rets is None:
+        benchmark_rets = utils.get_symbol_rets('SPY')
+        # If the strategy's history is longer than the benchmark's, limit
+        # strategy
+        if returns.index[0] < benchmark_rets.index[0]:
+            returns = returns[returns.index > benchmark_rets.index[0]]
+    df_cum_rets = timeseries.cum_returns(returns, starting_value=1)
+    
+    drawdown_df = plotting.show_worst_drawdown_periods(returns,investment=investment)  # *shares_held
+
+    
+    return drawdown_df
+
+@plotting_context
 def create_returns_tear_sheet_ret(returns, live_start_date=None,
                               cone_std=(1.0, 1.5, 2.0),
                               benchmark_rets=None,
@@ -862,6 +884,8 @@ def create_round_trip_tear_sheet(returns, positions, transactions,
 
     transactions_closed = round_trips.add_closing_transactions(positions,
                                                                transactions)
+    print("transactions_closed")
+    print(transactions_closed)
     # extract_round_trips requires BoD portfolio_value
     trades = round_trips.extract_round_trips(
         transactions_closed,
@@ -915,6 +939,33 @@ def create_round_trip_tear_sheet(returns, positions, transactions,
     gs.tight_layout(fig)
     
     return fig, stats_table, trades
+
+@plotting_context
+def create_round_trip_tear_sheet_data(returns, positions, transactions,
+                                 sector_mappings=None,
+                                 return_fig=False,
+                                 shares_held=1,
+                                 slippage=0):
+
+    transactions_closed = round_trips.add_closing_transactions(positions,
+                                                               transactions)
+    # extract_round_trips requires BoD portfolio_value
+    trades = round_trips.extract_round_trips(
+        transactions_closed,
+        portfolio_value=positions.sum(axis='columns') / (1 + returns),
+        shares_held=shares_held,
+        slippage=slippage
+    )
+    print("Number of trades")
+    print(trades)
+    if len(trades) < 5:
+        warnings.warn(
+            """Fewer than 5 round-trip trades made.
+               Skipping round trip tearsheet.""", UserWarning)
+        return
+    stats_table = round_trips.print_round_trip_stats(trades)
+    
+    return stats_table  # trades
 
 
 @plotting_context
