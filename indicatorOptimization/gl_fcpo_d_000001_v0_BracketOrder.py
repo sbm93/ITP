@@ -328,7 +328,8 @@ futures_like = True
 
 fromdate = datetime.datetime(2000, 1, 1)
 last_row = pd.read_csv(path+"/"+filename)
-todate = datetime.datetime.strptime(last_row.iloc[len(last_row)-1]['Date'], '%Y-%d-%m')
+# todate = datetime.datetime.strptime(last_row.iloc[len(last_row)-1]['Date'], '%Y-%d-%m')
+todate = datetime.datetime(2015, 12, 31)
 
 import_Data = True
 
@@ -434,7 +435,7 @@ for period_sma5 in np.arange(6, 20, 3):  # 6
     for period_sma25 in np.arange(6, 30, 2):  # 6
         for period_he in np.arange(6, 40, 2):  # 6
             i = i+1
-            res = run_strategy(BRACKET_ORDER_STR, strategy_variable['SG'], 
+            res = run_strategy(BRACKET_ORDER_STR, strategy_variable['GL'], 
                                period_sma5, 
                                period_sma25, 
                                period_he,
@@ -449,7 +450,7 @@ for period_sma5 in np.arange(6, 20, 3):  # 6
                 transactions=transactions,
                 sector_mappings=None,
                 return_fig=True,
-                shares_held=strategy_variable['SG']['lotsize'],
+                shares_held=strategy_variable['GL']['lotsize'],
                 slippage=0)
             drawdown_df = pf.create_returns_tear_drawdown_data(
                 returns,
@@ -463,7 +464,8 @@ for period_sma5 in np.arange(6, 20, 3):  # 6
             df_per = drawdown_df['percentage']
             df_abs = drawdown_df['absolute']
             rd_ret = round_trip_data['returns']
-            final_results_list.append([period_sma5, period_sma25, period_he, rd_ret[rd_ret.columns[0]].iloc[0],round_trip_data['pnl'][round_trip_data['pnl'].columns[0]].iloc[0].round(2), df_per[df_per.columns[0]].iloc[0], df_abs[df_abs.columns[0]].iloc[0] ])
+            ret = ( rd_ret[rd_ret.columns[0]].iloc[0]/strategy_variable['GL']['investment'] ) * 100
+            final_results_list.append([period_sma5, period_sma25, period_he, ret,round_trip_data['pnl'][round_trip_data['pnl'].columns[0]].iloc[0].round(2), df_per[df_per.columns[0]].iloc[0], df_abs[df_abs.columns[0]].iloc[0] ])
             print("Number of iteration: ")
             print(i)
 

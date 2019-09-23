@@ -52,7 +52,7 @@ strail_price = 0
 strategyname = 'SG_FCPO_D_000002'
 period_sma5 = 5
 period_sma25 = 20
-period_he = 20
+period_direc = 20
    
 # Create a Stratey
 class GL_FCPO_D_000003_V0_SINGLE_OUTPUTSAMPLE(bt.Strategy):
@@ -68,7 +68,7 @@ class GL_FCPO_D_000003_V0_SINGLE_OUTPUTSAMPLE(bt.Strategy):
         strail_target_exit = sttex,
         period_sma5=period_sma5,
         period_sma25=period_sma25,
-        period_he=period_he
+        period_direc=period_direc
 
     )
 
@@ -94,8 +94,8 @@ class GL_FCPO_D_000003_V0_SINGLE_OUTPUTSAMPLE(bt.Strategy):
         self.sma5 = bt.indicators.SMA(self.dataclose, period=self.params.period_sma5, plotname='mysma')
         self.sma25 = bt.indicators.SMA(self.dataclose, period=self.params.period_sma25, plotname='mysma')
         #self.smaco = btind.CrossOver(self.sma5,self.sma25)
-        self.direc = bt.indicators.DirectionalMovement(self.datas[0],period=20,plot=False)    
-        self.he = bt.indicators.HurstExponent(self.dataclose,period=self.params.period_he)
+        self.direc = bt.indicators.DirectionalMovement(self.datas[0],period=self.params.period_direc,plot=False)    
+        self.he = bt.indicators.HurstExponent(self.dataclose,period=20)
         self.direcco = btind.CrossOver(self.direc.plusDI,self.direc.minusDI,plot=False)
         self.highest = bt.indicators.Highest(self.datahigh,period=3)
         self.lowest = bt.indicators.Lowest(self.datalow,period=3)
@@ -302,7 +302,8 @@ futures_like = True
 
 fromdate = datetime.datetime(2000, 1, 1)
 last_row = pd.read_csv(path+"/"+filename)
-todate = datetime.datetime.strptime(last_row.iloc[len(last_row)-1]['Date'], '%Y-%d-%m')
+# todate = datetime.datetime.strptime(last_row.iloc[len(last_row)-1]['Date'], '%Y-%d-%m')
+todate = datetime.datetime(2015, 12, 31)
 
 import_Data = True
 
@@ -332,10 +333,10 @@ strategyname = 'SG_FCPO_D_000002'
 def run_strategy(strategy, variables, 
                  period_sma5=None, 
                  period_sma25=None, 
-                 period_he=None,
+                 period_direc=None,
                  issg=False):
     print("run strategy")
-    print(period_sma5, period_sma25, period_he)
+    print(period_sma5, period_sma25, period_direc)
     cerebro = bt.Cerebro()
     modpath = os.path.dirname(os.path.abspath(sys.argv[0]))
     datapath = os.path.join(modpath,path,filename)
@@ -362,7 +363,7 @@ def run_strategy(strategy, variables,
     if issg == False:
         cerebro.addstrategy(strategy, period_sma5=period_sma5,
             period_sma25=period_sma25,
-            period_he = period_he)
+            period_direc = period_direc)
     else:
         cerebro.addstrategy(strategy)
 
@@ -406,14 +407,14 @@ lpt = 0.08 #np.arange(0.08, 0.2, 0.02)
 spt = 0.08 #np.arange(0.08, 0.2, 0.02)
 i = 0
 
-for period_sma5 in np.arange(6, 20, 2):  # 6
-    for period_sma25 in np.arange(period_sma5+2, 22, 2): # 6
-        for period_he in np.arange(6, 20, 2):
+for period_sma5 in np.arange(5, 20, 2):  # 6
+    for period_sma25 in np.arange(period_sma5+3, 22, 2): # 6
+        for period_direc in np.arange(6, 20, 2):
             i = i+1
-            res = run_strategy(GL_FCPO_D_000003_V0_SINGLE_OUTPUTSAMPLE, strategy_variable['SG'], 
+            res = run_strategy(GL_FCPO_D_000003_V0_SINGLE_OUTPUTSAMPLE, strategy_variable['GL'], 
                                period_sma5, 
                                period_sma25, 
-                               period_he,
+                               period_direc,
                                issg=False)                        
             pyfolio = res[0].analyzers.getbyname('pyfolio')
             returns, positions, transactions, gross_lev = pyfolio.get_pf_items()
@@ -425,7 +426,7 @@ for period_sma5 in np.arange(6, 20, 2):  # 6
                 transactions=transactions,
                 sector_mappings=None,
                 return_fig=True,
-                shares_held=strategy_variable['SG']['lotsize'],
+                shares_held=strategy_variable['GL']['lotsize'],
                 slippage=0)
             drawdown_df = pf.create_returns_tear_drawdown_data(
                 returns,
@@ -439,13 +440,14 @@ for period_sma5 in np.arange(6, 20, 2):  # 6
             df_per = drawdown_df['percentage']
             df_abs = drawdown_df['absolute']
             rd_ret = round_trip_data['returns']
-            final_results_list.append([period_sma5, period_sma25, period_he, rd_ret[rd_ret.columns[0]].iloc[0],round_trip_data['pnl'][round_trip_data['pnl'].columns[0]].iloc[0].round(2), df_per[df_per.columns[0]].iloc[0], df_abs[df_abs.columns[0]].iloc[0] ])
+            ret = ( rd_ret[rd_ret.columns[0]].iloc[0]/strategy_variable['GL']['investment'] ) * 100
+            final_results_list.append([period_sma5, period_sma25, period_direc, ret,round_trip_data['pnl'][round_trip_data['pnl'].columns[0]].iloc[0].round(2), df_per[df_per.columns[0]].iloc[0], df_abs[df_abs.columns[0]].iloc[0] ])
             print("Number of iteration: ")
             print(i)
 
 time_b = datetime.datetime.now()
 print(time_b-time_a)
-list = pd.DataFrame(final_results_list, columns = ['period_sma5','period_sma25','period_he', 'return', 'pnl', 'drawdown (%)', 'drawdown (abs)'])
+list = pd.DataFrame(final_results_list, columns = ['period_sma5','period_sma25','period_direc', 'return', 'pnl', 'drawdown (%)', 'drawdown (abs)'])
 list.to_csv("gl_fcpo_d_000003_v0_single_outsample.csv")
 print("printing i value: ")
 print(i)
