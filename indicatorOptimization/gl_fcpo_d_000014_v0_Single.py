@@ -49,8 +49,6 @@ strail_flag = 0
 strail_price = 0
 
 strategyname = 'SG_FCPO_D_000002'
-period_sma5 = 6 
-period_sma25 = 6
 period_me1 = 6
 period_me2 = 6
 period_sig = 6
@@ -69,8 +67,6 @@ class CUSTOM_STRAT_FOURTEEN_VO_SRT(bt.Strategy):
         sstop_loss=ssl,
         strail_target = stt,
         strail_target_exit = sttex,
-        period_sma5 = period_sma5,
-        period_sma25 = period_sma25,
         period_me1 = period_me1,
         period_me2 = period_me2,
         period_sig = period_sig,
@@ -96,8 +92,8 @@ class CUSTOM_STRAT_FOURTEEN_VO_SRT(bt.Strategy):
         self.datalow = self.datas[0].low
         self.dataclose = self.datas[0].close
         self.ha = bt.indicators.HeikinAshi()
-        self.sma5 = bt.indicators.SMA(self.ha.ha_close, period=self.params.period_sma5,plot=False)
-        self.sma25 = bt.indicators.SMA(self.ha.ha_close, period=self.params.period_sma25,plot=False)
+        self.sma5 = bt.indicators.SMA(self.ha.ha_close, period=5,plot=False)
+        self.sma25 = bt.indicators.SMA(self.ha.ha_close, period=25,plot=False)
         #self.smaco = btind.CrossOver(self.sma5,self.sma25,plot=False)
         #self.highest = bt.indicators.Highest(self.datahigh,period=7)
         self.macdhist = bt.indicators.MACDHisto(period_me1=self.params.period_me1,period_me2=self.params.period_me2,period_signal=self.params.period_sig)
@@ -327,15 +323,13 @@ strail_price = 0
 strategyname = 'SG_FCPO_D_000002'
    
 
-def run_strategy(strategy, variables, 
-                 period_sma5=None, 
-                 period_sma25=None, 
+def run_strategy(strategy, variables,  
                  period_me1=None, 
                  period_me2=None, 
                  period_sig=None,
                  issg=False):
     print("run strategy")
-    print(period_sma5, period_sma25, period_me1, period_me2, period_sig)
+    print(period_me1, period_me2, period_sig)
     cerebro = bt.Cerebro()
     modpath = os.path.dirname(os.path.abspath(sys.argv[0]))
     datapath = os.path.join(modpath,path,filename)
@@ -360,8 +354,7 @@ def run_strategy(strategy, variables,
     cerebro.addanalyzer(bt.analyzers.PyFolio)
     cerebro.adddata(data)
     if issg == False:
-        cerebro.addstrategy(strategy, period_sma5=period_sma5,
-            period_sma25=period_sma25,
+        cerebro.addstrategy(strategy,
             period_me1 = period_me1,
             period_me2 = period_me2,
             period_sig = period_sig)
@@ -404,45 +397,43 @@ time_a = datetime.datetime.now()
 lpt = 0.08 #np.arange(0.08, 0.2, 0.02)
 spt = 0.08 #np.arange(0.08, 0.2, 0.02)
 i = 0
-for period_sma5 in np.arange(3, 20, 3):  # 6
-    for period_sma25 in np.arange(6, 20, 3): # 6
-        for period_me1 in np.arange(3, 20, 3):  # 6
-            for period_me2 in np.arange(6, 30, 2): # 6
-                for period_sig in np.arange(3, 20, 2):
-                    i = i+1
-                    res = run_strategy(CUSTOM_STRAT_FOURTEEN_VO_SRT, strategy_variable['GL'], period_sma5, period_sma25, period_me1, period_me2, period_sig, False)                        
-                    pyfolio = res[0].analyzers.getbyname('pyfolio')
-                    returns, positions, transactions, gross_lev = pyfolio.get_pf_items()
-            #                round_trip_data, drawdown_df = gen_report(returns, positions, transactions, gross_lev, benchmark, strategy_variable['SG'])
-                    
-                    round_trip_data = pf.create_round_trip_tear_sheet_data(
-                        returns=returns,
-                        positions=positions,
-                        transactions=transactions,
-                        sector_mappings=None,
-                        return_fig=True,
-                        shares_held=strategy_variable['GL']['lotsize'],
-                        slippage=0)
-                    drawdown_df = pf.create_returns_tear_drawdown_data(
-                        returns,
-                        live_start_date=None,
-                        cone_std=(1.0, 1.5, 2.0),
-                        benchmark_rets=benchmark,
-                        bootstrap=False,
-                        set_context=True,
-                        investment=tinvestment,
-                        shares_held=lotsize)
-                    df_per = drawdown_df['percentage']
-                    df_abs = drawdown_df['absolute']
-                    rd_ret = round_trip_data['returns']
-                    ret = ( rd_ret[rd_ret.columns[0]].iloc[0]/strategy_variable['GL']['investment'] ) * 100
-                    final_results_list.append([period_sma5, period_sma25, period_me1, period_me2, period_sig, ret,round_trip_data['pnl'][round_trip_data['pnl'].columns[0]].iloc[0].round(2), df_per[df_per.columns[0]].iloc[0], df_abs[df_abs.columns[0]].iloc[0] ])
-                    print("Number of iteration: ")
-                    print(i)
+for period_me1 in np.arange(3, 20, 3):  # 6
+    for period_me2 in np.arange(6, 30, 2): # 6
+        for period_sig in np.arange(3, 20, 2):
+            i = i+1
+            res = run_strategy(CUSTOM_STRAT_FOURTEEN_VO_SRT, strategy_variable['GL'], period_me1, period_me2, period_sig, False)                        
+            pyfolio = res[0].analyzers.getbyname('pyfolio')
+            returns, positions, transactions, gross_lev = pyfolio.get_pf_items()
+    #                round_trip_data, drawdown_df = gen_report(returns, positions, transactions, gross_lev, benchmark, strategy_variable['SG'])
+            
+            round_trip_data = pf.create_round_trip_tear_sheet_data(
+                returns=returns,
+                positions=positions,
+                transactions=transactions,
+                sector_mappings=None,
+                return_fig=True,
+                shares_held=strategy_variable['GL']['lotsize'],
+                slippage=0)
+            drawdown_df = pf.create_returns_tear_drawdown_data(
+                returns,
+                live_start_date=None,
+                cone_std=(1.0, 1.5, 2.0),
+                benchmark_rets=benchmark,
+                bootstrap=False,
+                set_context=True,
+                investment=tinvestment,
+                shares_held=lotsize)
+            df_per = drawdown_df['percentage']
+            df_abs = drawdown_df['absolute']
+            rd_ret = round_trip_data['returns']
+            ret = ( rd_ret[rd_ret.columns[0]].iloc[0]/strategy_variable['GL']['investment'] ) * 100
+            final_results_list.append([period_me1, period_me2, period_sig, ret,round_trip_data['pnl'][round_trip_data['pnl'].columns[0]].iloc[0].round(2), df_per[df_per.columns[0]].iloc[0], df_abs[df_abs.columns[0]].iloc[0] ])
+            print("Number of iteration: ")
+            print(i)
 
 time_b = datetime.datetime.now()
 print(time_b-time_a)
-list = pd.DataFrame(final_results_list, columns = ['period_sma5','period_sma25','period_me1','period_me2','period_sig', 'return', 'pnl', 'drawdown (%)', 'drawdown (abs)'])
+list = pd.DataFrame(final_results_list, columns = ['period_me1','period_me2','period_sig', 'return', 'pnl', 'drawdown (%)', 'drawdown (abs)'])
 list.to_csv("gl_fcpo_d_000014_v0_Single.csv")
 print("printing i value: ")
 print(i)
