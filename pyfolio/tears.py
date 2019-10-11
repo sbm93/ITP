@@ -867,7 +867,7 @@ def create_round_trip_tear_sheet(returns, positions, transactions,
     Parameters
     ----------
     returns : pd.Series
-        Daily returns of the strategy, noncumulative.
+        Daily returns of the strategy, nocreate_full_tear_sheetncumulative.
          - See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
@@ -884,8 +884,6 @@ def create_round_trip_tear_sheet(returns, positions, transactions,
 
     transactions_closed = round_trips.add_closing_transactions(positions,
                                                                transactions)
-    print("transactions_closed")
-    print(transactions_closed)
     # extract_round_trips requires BoD portfolio_value
     trades = round_trips.extract_round_trips(
         transactions_closed,
@@ -893,8 +891,7 @@ def create_round_trip_tear_sheet(returns, positions, transactions,
         shares_held=shares_held,
         slippage=slippage
     )
-    print("Number of trades")
-    print(trades)
+    trades.to_csv("generated trades.csv")
     if len(trades) < 5:
         warnings.warn(
             """Fewer than 5 round-trip trades made.
@@ -922,7 +919,7 @@ def create_round_trip_tear_sheet(returns, positions, transactions,
 
     plotting.plot_round_trip_life_times(trades, ax=ax_trade_lifetimes)
 
-    plotting.plot_prob_profit_trade(trades, ax=ax_prob_profit_trade)
+    # plotting.plot_prob_profit_trade(trades, ax=ax_prob_profit_trade)
 
     trade_holding_times = [x.days for x in trades['duration']]
     sns.distplot(trade_holding_times, kde=False, ax=ax_holding_time)
@@ -956,8 +953,6 @@ def create_round_trip_tear_sheet_data(returns, positions, transactions,
         shares_held=shares_held,
         slippage=slippage
     )
-    print("Number of trades")
-    print(trades)
     if len(trades) < 5:
         warnings.warn(
             """Fewer than 5 round-trip trades made.

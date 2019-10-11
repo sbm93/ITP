@@ -23,6 +23,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import matplotlib.lines as mlines
+from mpmath.tests import torture
 
 from sklearn import preprocessing
 
@@ -258,11 +259,14 @@ def plot_annual_returns(returns, ax=None, **kwargs):
     ax.xaxis.set_major_formatter(FuncFormatter(x_axis_formatter))
     
     ax.tick_params(axis='x', which='major', labelsize=10)
-
+    print("returns returns ")
+    print(returns)
     ann_ret_df = pd.DataFrame(
         timeseries.aggregate_returns(
             returns,
             'yearly'))
+    print("ann_ret_df last")
+    print(ann_ret_df)
     colors_s = []
     
     for index, row in ann_ret_df.iterrows():
@@ -1760,6 +1764,10 @@ def plot_prob_profit_trade(round_trips, ax=None):
 
     dist = sp.stats.beta(round_trips.profitable.sum(),
                          (~round_trips.profitable).sum())
+
+    print("testing for dist")
+    print(dist)
+
     y = dist.pdf(x)
     lower_perc = dist.ppf(.025)
     upper_perc = dist.ppf(.975)
@@ -1773,7 +1781,8 @@ def plot_prob_profit_trade(round_trips, ax=None):
     ax.plot(x, y)
     ax.axvline(lower_perc, color='0.5')
     ax.axvline(upper_perc, color='0.5')
-
+    print("Probability making a profitable decision")
+    print(lower_plot,upper_plot)
     ax.set(xlabel='Probability making a profitable decision', ylabel='Belief',
            xlim=(lower_plot, upper_plot), ylim=(0, y.max() + 1.))
 

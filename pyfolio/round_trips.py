@@ -196,7 +196,6 @@ def extract_round_trips(transactions,
         trans_sym['signed_price'] = trans_sym.price * \
             np.sign(trans_sym.amount)
         trans_sym['abs_amount'] = trans_sym.amount.abs().astype(int)
-		
         for dt, t in trans_sym.iterrows():
             if t.price < 0:
                 warnings.warn('Negative price detected, ignoring for'
@@ -214,15 +213,18 @@ def extract_round_trips(transactions,
                 invested = 0
                 cur_open_dts = []
                 start_price = price_stack[0]
+                print(indiv_prices)
                 for price in indiv_prices:
                     if len(price_stack) != 0 and \
                        (copysign(1, price_stack[-1]) != copysign(1, price)):
                         # Retrieve first dt, stock-price pair from
                         # stack
                         prev_price = price_stack.popleft()
+                        print(dt_stack)
                         prev_dt = dt_stack.popleft()
 
                         pnl += -(price + prev_price)
+                        print(prev_dt)
                         cur_open_dts.append(prev_dt)
                         invested += abs(prev_price)
 
