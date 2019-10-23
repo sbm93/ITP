@@ -217,7 +217,7 @@ class THREE_VO_STRAT_OUTSAMPLE(bt.Strategy):
                 
                 # Short profit target exit    
                 if(self.datalow[0] <= sentryprice*(1 - self.p.sprofit_target) and self.datahigh[0] >= sentryprice*(1-self.p.sprofit_target)):
-                    shortptexit = self.buy(exectype=bt.Order.Limit, price=sentryprice*(1-self.p.sprofit_target))
+                    shortptexit = self.buy(exectype=bt.Order-Market, price=sentryprice*(1-self.p.sprofit_target))
                     cancelshorttrailexit = self.broker.cancel(shorttrailexit)
                     sentryprice = 0
                 # Short stop loss exit    
